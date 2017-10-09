@@ -33,7 +33,7 @@ var Languages = [
 	"Count"
 ];
 
-var TimeSinceUpdated = new Date();
+var startRegion = "us";
 
 var DemoWss = this["AppInfo"] && this["AppInfo"]["Wss"];
 var DemoAppId = this["AppInfo"] && this["AppInfo"]["AppId"] ? this["AppInfo"]["AppId"] : "<no-app-id>";
@@ -53,7 +53,7 @@ var DemoLoadBalancing = (function (_super) {
 		this.connectOptions.lobbyName = "Lobo Lobby";
 		this.connectOptions.lobbyType = 2;
 		this.connectOptions.sqlLobbyFilter = "";
-		this.connectToRegionMaster("US");
+		this.connectToRegionMaster(startRegion);
     };
     DemoLoadBalancing.prototype.onError = function (errorCode, errorMsg) {
         this.output("Error " + errorCode + ": " + errorMsg);
@@ -151,6 +151,14 @@ var DemoLoadBalancing = (function (_super) {
 }(Photon.LoadBalancing.LoadBalancingClient));
 var demo;
 window.onload = function () {
+	var region = document.getElementById("region");
+	var hash = location.hash.substring(1).toLowerCase();
+	for (i = 0; i < region.options.length; ++i){
+		if (region.options[i].value == hash){
+			startRegion = hash;
+			region.value = hash;
+		}
+	}
     demo = new DemoLoadBalancing();
     demo.start();
 };
@@ -168,4 +176,5 @@ regionChanged = function() {
 	{
 		document.getElementById("langNotice").style.display = "none";
 	}
+	location.hash = "#" + region;
 }
