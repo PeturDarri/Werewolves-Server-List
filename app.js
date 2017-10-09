@@ -70,6 +70,11 @@ var DemoLoadBalancing = (function (_super) {
 			statusElem.innerHTML = "Connected";
 			statusElem.style.color = "green";
 		}
+		else if (state > 0 && state < 10)
+		{
+			statusElem.innerHTML = "Connecting...";
+			statusElem.style.color = "#757575";
+		}
 		else
 		{
 			statusElem.innerHTML = "Disconnected (Try refreshing)";
