@@ -89,7 +89,6 @@ var DemoLoadBalancing = (function (_super) {
 		lobbiesGotten = true;
 		var rooms = [];
 		lobbyCount = roomInfos.length;
-		document.getElementById("privateLobbyCount").innerHTML = allLobbyCount - lobbyCount;
 		if (roomInfos.length > 0)
 		{
 			for (var i = 0; i < roomInfos.length; i++) {
@@ -188,6 +187,7 @@ regionChanged = function() {
 	location.hash = "#" + region;
 	lobbyCount = 0;
 	lobbiesGotten = false;
+	document.getElementById("privateLobbyCount").innerHTML = "...";
 }
 
 checkShowNotice = function(region) {
