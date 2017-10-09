@@ -34,6 +34,9 @@ var Languages = [
 ];
 
 var startRegion = "us";
+var lobbyCount = 0;
+var allLobbyCount = 0;
+var lobbiesGotten = false;
 
 var DemoWss = this["AppInfo"] && this["AppInfo"]["Wss"];
 var DemoAppId = this["AppInfo"] && this["AppInfo"]["AppId"] ? this["AppInfo"]["AppId"] : "<no-app-id>";
@@ -83,8 +86,10 @@ var DemoLoadBalancing = (function (_super) {
 	};
 	
     DemoLoadBalancing.prototype.onRoomList = function (roomInfos) {
+		lobbiesGotten = true;
 		var rooms = [];
-		
+		lobbyCount = roomInfos.length;
+		document.getElementById("privateLobbyCount").innerHTML = allLobbyCount - lobbyCount;
 		if (roomInfos.length > 0)
 		{
 			for (var i = 0; i < roomInfos.length; i++) {
@@ -146,6 +151,16 @@ var DemoLoadBalancing = (function (_super) {
 		divContainer.innerHTML = "";
 		divContainer.appendChild(table);
     };
+	
+	DemoLoadBalancing.prototype.onAppStats = function (errorCode, errorMsg, stats) {
+		document.getElementById("fullPlayerCount").innerHTML = (stats.peerCount + stats.masterPeerCount) - 1;
+		document.getElementById("playerCount").innerHTML = stats.masterPeerCount - 1;
+		allLobbyCount = stats.gameCount;
+		if (lobbiesGotten)
+		{
+			document.getElementById("privateLobbyCount").innerHTML = allLobbyCount - lobbyCount;
+		}
+	};
     
     return DemoLoadBalancing;
 }(Photon.LoadBalancing.LoadBalancingClient));
@@ -159,6 +174,7 @@ window.onload = function () {
 			region.value = hash;
 		}
 	}
+	checkShowNotice(startRegion);
     demo = new DemoLoadBalancing();
     demo.start();
 };
@@ -166,8 +182,15 @@ window.onload = function () {
 regionChanged = function() {
 	var regionElem = document.getElementById("region");
 	var region = regionElem.options[regionElem.selectedIndex].value;
+	checkShowNotice(region);
 	demo.disconnect();
 	demo.connectToRegionMaster(region);
+	location.hash = "#" + region;
+	lobbyCount = 0;
+	lobbiesGotten = false;
+}
+
+checkShowNotice = function(region) {
 	if (region == "eu")
 	{
 		document.getElementById("langNotice").style.display = "block";
@@ -176,5 +199,4 @@ regionChanged = function() {
 	{
 		document.getElementById("langNotice").style.display = "none";
 	}
-	location.hash = "#" + region;
 }
