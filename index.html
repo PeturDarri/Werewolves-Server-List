@@ -1,0 +1,68 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>TypeScript HTML App</title>
+		<script type="text/javascript" src="Photon/3rdparty/web_socket.js"></script>
+		<!--lib--><script type="text/javascript" src="Photon/Photon-Javascript_SDK.js"></script>
+		<!--info (optional)--><script type="text/javascript" src="cloud-app-info.js"></script>
+		<script type="text/javascript" src="app.js"></script>
+		<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+		<style>
+			table {
+				border-collapse: collapse;
+				width: 100%;
+			}
+
+			th, td {
+				text-align: left;
+				padding: 8px;
+			}
+
+			tr:nth-child(even){background-color: #f2f2f2}
+
+			th {
+				background-color: #4CAF50;
+				color: white;
+			}
+			
+			body {
+				font-family: 'Roboto', sans-serif;
+				max-width: 1280px;
+				margin: auto;
+			}
+
+			#wrapper {
+				margin: 10px;
+			}
+			
+			#connectStatus {
+				color: red;
+			}
+			
+			#region {
+				margin-bottom: 4px;
+				transform: translateY(-2px);
+			}
+			
+			#langNotice {
+				display: none;
+			}
+		</style>
+	</head>
+	<body>
+		<h1 align="center">Werewolves Within - Server List</h1>
+		
+		<div id="wrapper">
+			<b><span id="connectStatus">Disconnected</span></b>
+			<select id="region" onchange="regionChanged()">
+				<option value="us">US</option>
+				<option value="eu">EU</option>
+			</select>
+			<div id="showData"></div>
+			<p id="langNotice"><i><b>Notice</b>: You can only join rooms with the same language as you've set in options</i></p>
+		</div>
+	</body>
+</html>
