@@ -5,11 +5,17 @@
 		<!-- Global Site Tag (gtag.js) - Google Analytics -->
 		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-107777847-1"></script>
 		<script>
+		var pagePath = "/#us";
+		if (location.hash != "")
+		{
+			pagePath = "/" + location.hash;
+		}
+
 		window.dataLayer = window.dataLayer || [];
 		function gtag(){dataLayer.push(arguments);}
 		gtag('js', new Date());
-
-		gtag('config', 'UA-107777847-1');
+		
+		gtag('config', 'UA-107777847-1', {'page_path': pagePath});
 		</script>
 
 		<meta charset="utf-8" />

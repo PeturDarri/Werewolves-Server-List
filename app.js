@@ -181,10 +181,11 @@ window.onload = function () {
 regionChanged = function() {
 	var regionElem = document.getElementById("region");
 	var region = regionElem.options[regionElem.selectedIndex].value;
+	location.hash = "#" + region;
 	checkShowNotice(region);
 	demo.disconnect();
 	demo.connectToRegionMaster(region);
-	location.hash = "#" + region;
+	
 	lobbyCount = 0;
 	lobbiesGotten = false;
 	document.getElementById("privateLobbyCount").innerHTML = "...";
@@ -199,4 +200,6 @@ checkShowNotice = function(region) {
 	{
 		document.getElementById("langNotice").style.display = "none";
 	}
+
+	gtag('config', 'UA-107777847-1', {'page_path': "/" + location.hash});
 }
