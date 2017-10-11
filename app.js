@@ -93,15 +93,15 @@ var DemoLoadBalancing = (function (_super) {
 		{
 			for (var i = 0; i < roomInfos.length; i++) {
 				var spectatorString = "";
-				if (roomInfos[i].playerCount > 8)
+				var spectatorCount = roomInfos[i].getCustomProperty("C6");
+				if (spectatorCount > 0)
 				{
-					spectatorString = " (+" + (roomInfos[i].playerCount - 8) + ")";
-					roomInfos[i].playerCount = 8;
+					spectatorString = " (+" + spectatorCount + ")";
 				}
 				
 				var room = {
 					"Name": roomInfos[i].name.split("-")[0],
-					"Players": roomInfos[i].playerCount + "/8" + spectatorString,
+					"Players": roomInfos[i].getCustomProperty("C1") + "/8" + spectatorString,
 					"Language": Languages[roomInfos[i].getCustomProperty("C0")]
 				};
 				rooms.push(room);
