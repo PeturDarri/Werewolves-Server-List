@@ -30,7 +30,12 @@
 		<!--lib--><script type="text/javascript" src="Photon/Photon-Javascript_SDK.js"></script>
 		<!--info (optional)--><script type="text/javascript" src="cloud-app-info.js"></script>
 		<script type="text/javascript" src="app.js"></script>
+
 		<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+ 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
 		<style>
 			table {
 				border-collapse: collapse;
@@ -42,9 +47,9 @@
 				padding: 8px;
 			}
 
-			tr:nth-child(even){background-color: #f2f2f2}
-
-			th {
+			th 
+			{
+				border: 1px solid #4CAF50;
 				background-color: #4CAF50;
 				color: white;
 			}
@@ -53,6 +58,48 @@
 				font-family: 'Roboto', sans-serif;
 				max-width: 1280px;
 				margin: auto;
+			}
+
+			.extraServerCell
+			{
+				padding: 0;
+			}
+
+			.extraServerInside
+			{
+				background-color: #555;
+				color: white;
+				padding: 8px;
+				height: auto;
+				width: 100%;
+			}
+
+			.clickable-row
+			{
+				cursor: pointer;
+				border: 1px solid lightgray;
+				border-top: none;
+			}
+
+			#noServers
+			{
+				border: 1px solid lightgray;
+				border-top: none;
+			}
+
+			.playerList
+			{
+				margin: 0;
+			}
+
+			.numPlayerPlayed
+			{
+				color: #bfbfbf;
+			}
+
+			.clickable-row:hover
+			{
+				background-color: #f2f2f2;
 			}
 
 			#wrapper {
@@ -87,6 +134,10 @@
 			#topBar {
 				
 			}
+
+			#playersNotice {
+				float: right;
+			}
 		</style>
 	</head>
 	<body>
@@ -94,6 +145,9 @@
 		
 		<div id="wrapper">
 			<div id="topBar">
+				<div id="playersNotice">
+					<b>NEW:</b> You can now click on a server to see players!
+				</div>
 				<div id="connectionOptions">
 					<b><span id="connectStatus">Disconnected</span></b>
 					<select id="region" onchange="regionChanged()">
@@ -105,7 +159,19 @@
 					</select>
 				</div>
 			</div>
-			<div id="showData"></div>
+			<div id="showData">
+				<table id="serverTable">
+					<thead>
+						<tr>
+							<th>Name</th>
+							<th>Players</th>
+							<th>Language</th>
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+			</div>
 			<br>
 			<div id="extraInfo">
 				<span>Player count:<b><span class="extraNumber" id="fullPlayerCount">0</span></b></span>

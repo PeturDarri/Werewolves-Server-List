@@ -33,6 +33,7 @@ var Languages = [
 	"Count"
 ];
 
+var cachedRooms = [];
 var startRegion = "us";
 var lobbyCount = 0;
 var allLobbyCount = 0;
@@ -63,7 +64,7 @@ var DemoLoadBalancing = (function (_super) {
     };
 
     DemoLoadBalancing.prototype.onRoomListUpdate = function (rooms, roomsUpdated, roomsAdded, roomsRemoved) {
-        this.onRoomList(rooms);
+        this.onRoomList(this.availableRooms());
     };
 	
 	DemoLoadBalancing.prototype.onStateChange = function (state) {
@@ -85,70 +86,9 @@ var DemoLoadBalancing = (function (_super) {
 		}
 	};
 	
-    DemoLoadBalancing.prototype.onRoomList = function (roomInfos) {
-		lobbiesGotten = true;
-		var rooms = [];
-		lobbyCount = roomInfos.length;
-		if (roomInfos.length > 0)
-		{
-			for (var i = 0; i < roomInfos.length; i++) {
-				var spectatorString = "";
-				var spectatorCount = roomInfos[i].getCustomProperty("C6");
-				if (spectatorCount > 0)
-				{
-					spectatorString = " (+" + spectatorCount + ")";
-				}
-				
-				var room = {
-					"Name": roomInfos[i].name.split("-")[0],
-					"Players": roomInfos[i].getCustomProperty("C1") + "/8" + spectatorString,
-					"Language": Languages[roomInfos[i].getCustomProperty("C0")]
-				};
-				rooms.push(room);
-			}
-		}
-		else
-		{
-			var room = {
-				"Name": "No servers...",
-				"Players": "",
-				"Language": ""
-			};
-			rooms.push(room);
-		}
-		
-		var col = [];
-		for (var i = 0; i < rooms.length; i++) {
-			for (var key in rooms[i]) {
-				if (col.indexOf(key) === -1) {
-					col.push(key);
-				}
-			}
-		}
-
-		var table = document.createElement("table");
-
-		var tr = table.insertRow(-1);
-
-		for (var i = 0; i < col.length; i++) {
-			var th = document.createElement("th");
-			th.innerHTML = col[i];
-			tr.appendChild(th);
-		}
-
-		for (var i = 0; i < rooms.length; i++) {
-
-			tr = table.insertRow(-1);
-
-			for (var j = 0; j < col.length; j++) {
-				var tabCell = tr.insertCell(-1);
-				tabCell.innerHTML = rooms[i][col[j]];
-			}
-		}
-
-		var divContainer = document.getElementById("showData");
-		divContainer.innerHTML = "";
-		divContainer.appendChild(table);
+    DemoLoadBalancing.prototype.onRoomList = function (rooms)
+    {
+    	onRoomsList(rooms);
     };
 	
 	DemoLoadBalancing.prototype.onAppStats = function (errorCode, errorMsg, stats) {
@@ -178,6 +118,125 @@ window.onload = function () {
     demo.start();
 };
 
+onRoomsList = function(rooms)
+{
+	lobbiesGotten = true;
+	lobbyCount = rooms.length;
+	var roomsToNotRemove = [];
+	for (var i = 0; i < rooms.length; i++)
+	{
+		var name = rooms[i].name.split("-")[0];
+		roomsToNotRemove.push(name);
+		if (cachedRooms.includes(name))
+		{
+			onRoomChanged(rooms[i]);
+		}
+		else
+		{
+			onRoomAdded(rooms[i]);
+		}
+	}
+
+	for (var i = 0; i < cachedRooms.length; i++)
+	{
+		if (!roomsToNotRemove.includes(cachedRooms[i]))
+		{
+			onRoomRemoved(cachedRooms[i]);
+		}
+	}
+
+	if (lobbyCount == 0)
+	{
+		var table = document.getElementById("serverTable");
+		tr = table.tBodies[0].insertRow(-1);
+		tr.id = "noServers";
+		var cell = tr.insertCell(0);
+		cell.colSpan = 3;
+		cell.innerHTML = "No servers...";
+	}
+	else if (document.getElementById("noServers") != null)
+	{
+		document.getElementById("noServers").remove();
+	}
+}
+
+onRoomAdded = function(room)
+{
+	var name = room.name.split("-")[0];
+	var table = document.getElementById("serverTable");
+	tr = table.tBodies[0].insertRow(-1);
+
+	tr.id = name;
+	tr.className = "clickable-row";
+	tr.setAttribute("data-toggle", "collapse");
+	tr.setAttribute("data-target", "#" + name + "Info");
+
+	tr.insertCell(0).innerHTML = name;
+
+	var spectatorString = "";
+	var spectatorCount = room.getCustomProperty("C6");
+	if (spectatorCount > 0)
+	{
+		spectatorString = " (+" + spectatorCount + ")";
+	}
+
+	tr.insertCell(1).innerHTML = room.getCustomProperty("C1") + "/8" + spectatorString;
+	tr.insertCell(2).innerHTML = Languages[room.getCustomProperty("C0")];
+
+	//Extra info rows
+	var extraRow = table.tBodies[0].insertRow(-1);
+	var cell = extraRow.insertCell(0);
+	cell.colSpan = "3";
+	cell.className = "extraServerCell";
+	var div = document.createElement("div");
+	div.className = "collapse";
+	div.id = name + "Info";
+	var players = room.getCustomProperty("P");
+	var playersString = ["Player info missing..."];
+	if (players != null)
+	{
+		playersString = players.split(";");
+	}
+	addExtraInfo(div, playersString);
+	cell.appendChild(div);
+	cachedRooms.push(name);
+}
+
+onRoomChanged = function(room)
+{
+	var name = room.name.split("-")[0];
+	tr = document.getElementById(name);
+
+	var spectatorString = "";
+	var spectatorCount = room.getCustomProperty("C6");
+	if (spectatorCount > 0)
+	{
+		spectatorString = " (+" + spectatorCount + ")";
+	}
+	tr.cells[1].innerHTML = room.getCustomProperty("C1") + "/8" + spectatorString;
+	tr.cells[2].innerHTML = Languages[room.getCustomProperty("C0")];
+	//Extra info rows
+	var div = document.getElementById(name + "Info");
+	var players = room.getCustomProperty("P");
+	var playersString = ["Player info missing..."];
+	if (players != null)
+	{
+		playersString = players.split(";");
+	}
+
+	addExtraInfo(div, playersString);
+}
+
+onRoomRemoved = function(roomName)
+{
+	tr = document.getElementById(roomName);
+	tr.remove();
+	extraRow = document.getElementById(roomName + "Info").parentNode.parentNode;
+	extraRow.remove();
+	var index = cachedRooms.indexOf(roomName);
+	cachedRooms.splice(index, 1);
+}
+
 regionChanged = function() {
 	var regionElem = document.getElementById("region");
 	var region = regionElem.options[regionElem.selectedIndex].value;
@@ -189,6 +248,8 @@ regionChanged = function() {
 	lobbyCount = 0;
 	lobbiesGotten = false;
 	document.getElementById("privateLobbyCount").innerHTML = "...";
+	document.getElementById("serverTable").tBodies[0].innerHTML = "";
+	cachedRooms = [];
 }
 
 checkShowNotice = function(region) {
@@ -202,4 +263,45 @@ checkShowNotice = function(region) {
 	}
 
 	gtag('config', 'UA-107777847-1', {'page_path': "/" + location.hash});
+}
+
+addExtraInfo = function(parent, players)
+{
+	if (Object.prototype.toString.call(players) !== '[object Array]')
+	{
+	    players = [].concat(players);
+	}
+	parent.innerHTML = "";
+	var div = document.createElement("div");
+	div.className = "extraServerInside";
+	var ol = document.createElement("ol");
+	ol.className = "playerList";
+	if (players[0] == "Player info missing...")
+	{
+		ol.innerHTML = "Player info missing...";
+	}
+	else
+	{
+		for (var i = 0; i < players.length; i++)
+		{
+			var li = document.createElement("li");
+			var num = players[i].split(":")[1];
+			var name = players[i].split(":")[0];
+			li.innerHTML = "<b>" + name + "</b>" + "<span class=\"numPlayerPlayed\"> (played " + num + " rounds)</span>";
+			ol.appendChild(li);
+		}
+	}
+	div.appendChild(ol);
+	parent.appendChild(div);
+}
+
+Element.prototype.remove = function() {
+    this.parentElement.removeChild(this);
+}
+NodeList.prototype.remove = HTMLCollection.prototype.remove = function() {
+    for(var i = this.length - 1; i >= 0; i--) {
+        if(this[i] && this[i].parentElement) {
+            this[i].parentElement.removeChild(this[i]);
+        }
+    }
 }
