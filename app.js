@@ -148,6 +148,7 @@ onRoomsList = function(rooms)
 	if (lobbyCount == 0)
 	{
 		var table = document.getElementById("serverTable");
+		table.tBodies[0].innerHTML = "";
 		tr = table.tBodies[0].insertRow(-1);
 		tr.id = "noServers";
 		var cell = tr.insertCell(0);
