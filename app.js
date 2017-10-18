@@ -97,7 +97,7 @@ var DemoLoadBalancing = (function (_super) {
 		allLobbyCount = stats.gameCount;
 		if (lobbiesGotten)
 		{
-			document.getElementById("privateLobbyCount").innerHTML = allLobbyCount - lobbyCount;
+			document.getElementById("privateLobbyCount").innerHTML = Math.abs(allLobbyCount - lobbyCount);
 		}
 	};
     
@@ -288,6 +288,10 @@ addExtraInfo = function(parent, players)
 			var li = document.createElement("li");
 			var num = players[i].split(":")[1];
 			var name = players[i].split(":")[0];
+			if (name == "StableSheep")
+			{
+				li.id = "creatorPlayer";
+			}
 			li.innerHTML = "<b>" + name + "</b>" + "<span class=\"numPlayerPlayed\"> (played " + num + " rounds)</span>";
 			ol.appendChild(li);
 		}
