@@ -1,0 +1,53 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<!-- Global Site Tag (gtag.js) - Google Analytics -->
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-107777847-1"></script>
+		<script>
+		var pagePath = "/charts/#us";
+		if (location.hash != "")
+		{
+			pagePath = "/" + location.hash;
+		}
+
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		
+		gtag('config', 'UA-107777847-1', {'page_path': pagePath});
+		</script>
+
+		<meta charset="utf-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta property="og:image" content="preview/preview.png"/>
+		<meta name="description" content="Here you'll find all the lobbies for Werewolves Within"/>
+		<meta property="og:description" content="Here you'll find all the lobbies for Werewolves Within"/>
+		<meta property="og:title" content="Werewolves Within - Charts"/>
+		<link rel="icon" href="../favicon.ico" type="image/x-icon"/>
+		<title>Werewolves Within - Charts</title>
+
+		<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+ 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+ 		<link rel="stylesheet" href="charts.css">
+ 		<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.19.1/moment.min.js"></script>
+ 		<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.min.js"></script>
+ 		<script src="charts.js"></script>
+	<body>
+		<h1 align="center">Werewolves Within - Charts</h1>
+
+		<div id="wrapper">
+			<div id="topBar">
+				<select id="timeOffset" onchange="timeOffsetChanged()">
+					<option value="86400">Past 24 hours</option>	
+					<option value="604800" selected>Past week</option>
+					<option value="2628000">Past month</option>
+				</select>
+			</div>
+			<div id="chartContainer">
+			</div>
+		</div>
+	</body>
+</html>

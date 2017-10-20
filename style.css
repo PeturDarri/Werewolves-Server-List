@@ -1,0 +1,105 @@
+table {
+	border-collapse: collapse;
+	width: 100%;
+}
+
+th, td {
+	text-align: left;
+	padding: 8px;
+}
+
+th 
+{
+	border: 1px solid #4CAF50;
+	background-color: #4CAF50;
+	color: white;
+}
+
+body {
+	font-family: 'Roboto', sans-serif;
+	max-width: 1280px;
+	margin: auto;
+}
+
+.extraServerCell
+{
+	padding: 0;
+}
+
+.extraServerInside
+{
+	background-color: #555;
+	color: white;
+	padding: 8px;
+	height: auto;
+	width: 100%;
+}
+
+.clickable-row
+{
+	cursor: pointer;
+	border: 1px solid lightgray;
+	border-top: none;
+}
+
+#noServers
+{
+	border: 1px solid lightgray;
+	border-top: none;
+}
+
+.playerList
+{
+	margin: 0;
+}
+
+.numPlayerPlayed
+{
+	color: #bfbfbf;
+}
+
+.clickable-row:hover
+{
+	background-color: #f2f2f2;
+}
+
+#wrapper {
+	margin: 10px;
+}
+
+#connectStatus {
+	color: red;
+}
+
+#region {
+	margin-bottom: 4px;
+	transform: translateY(-2px);
+}
+
+#langNotice {
+	display: none;
+}
+
+#extraInfo span {
+	color: #757575;
+}
+
+#connectionOptions {
+	float: left;
+}
+
+.extraNumber {
+	margin-left: 4px;
+}
+
+#topBar {
+	
+}
+
+#playersNotice {
+	float: right;
+}
+
+#creatorPlayer {
+	color: #4CAF50;
+}	
