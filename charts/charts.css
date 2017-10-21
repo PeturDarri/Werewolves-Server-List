@@ -7,3 +7,33 @@ body {
 #wrapper {
 	margin: 10px;
 }
+
+#topBar {
+}
+
+#timeOffset {
+	float: left;
+	height: 30px;
+	max-width: 144px;
+	margin-right: 8px;
+	margin-bottom: 8px;
+}
+
+#datepicker {
+	float: left;
+}
+
+#datepicker-container {
+	display: none;
+	max-width: 400px;
+}
+
+#custom-button {
+	background-color: #5cb85c;
+	color: white;
+	border-color: #4cae4c;
+}
+
+#lobbiesLink {
+	float: right;
+}

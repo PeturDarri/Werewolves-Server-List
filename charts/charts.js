@@ -1,15 +1,28 @@
-var selectedTimeOffset = 604800;
+var startTimeOffset = Math.trunc(Date.now() / 1000) - 604800;
+var endTimeOffset = Math.trunc(Date.now() / 1000);
 	$(function()
 	{
 		updateData();
+
+		$("#custom-button").click(function(){
+			var startDate = $("#startDatePicker").data("DateTimePicker").date();
+			var endDate = $("#endDatePicker").data("DateTimePicker").date();
+			if (startDate != null && endDate != null)
+			{
+				startTimeOffset = startDate.startOf('day').unix();
+				endTimeOffset = endDate.startOf('day').add(1, 'days').unix();
+				updateData();
+			}
+		});
 	});
 
-	updateData = function()
+updateData = function()
 {
 	var usData = [];
 	var euData = [];
 
-	var filter = '?orderBy="$key"&startAt="' + (Math.trunc(Date.now() / 1000) - selectedTimeOffset) + '"'
+	console.log("using: " + startTimeOffset + " + " + endTimeOffset);
+	var filter = '?orderBy="$key"&startAt="' + startTimeOffset + '"&endAt="' + endTimeOffset + '"';
 		$.getJSON("https://werewolflobbies.firebaseio.com/us.json" + filter, function(data)
 		{
 			$.each(data, function(key, val)
@@ -51,7 +64,8 @@ var selectedTimeOffset = 604800;
 			            lineTension: 0,
 			            fill: false,
 			            backgroundColor: "rgba(76, 175, 80, 0.5)",
-			            data: usData
+			            data: usData,
+			            radius: 0
 			        },
 			        {
 			        	label: 'EU',
@@ -59,7 +73,8 @@ var selectedTimeOffset = 604800;
 			            lineTension: 0,
 			            fill: false,
 			            backgroundColor: "rgba(211, 75, 65, 0.5)",
-			            data: euData
+			            data: euData,
+			            radius: 0
 			        }
 		        ]
 		    },
@@ -85,6 +100,9 @@ var selectedTimeOffset = 604800;
 		                    suggestedMax: 60
 		                }
 		            }]
+		        },
+		        tooltips: {
+		        	intersect: false
 		        }
 		    }
 		});
@@ -95,6 +113,16 @@ timeOffsetChanged = function()
 {
 	var select = document.getElementById("timeOffset");
 	var value = select.options[select.selectedIndex].value;
-	selectedTimeOffset = parseInt(value);
-	updateData();
+	if (value != "custom")
+	{
+		$("#datepicker-container").hide();
+		startTimeOffset = Math.trunc(Date.now() / 1000) - parseInt(value);
+		endTimeOffset = Math.trunc(Date.now() / 1000);
+		updateData();
+	}
+	else
+	{
+		$("#datepicker-container").show();
+		$("#custom-button").click();
+	}
 }
