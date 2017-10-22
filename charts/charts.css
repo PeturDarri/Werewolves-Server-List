@@ -11,6 +11,10 @@ body {
 #topBar {
 }
 
+.clear {
+	clear: both;
+}
+
 #timeOffset {
 	float: left;
 	height: 30px;
@@ -36,4 +40,10 @@ body {
 
 #lobbiesLink {
 	float: right;
+	font-size: 1.2em;
+}
+
+#chartContainer {
+	position: relative;
+	height: 60vh;
 }

@@ -44,7 +44,7 @@
 					<option value="custom">Custom</option>
 				</select>
 				<div id="lobbiesLink">
-					<a href="https://werewolflobbies.com/">Back to lobbies</a>
+					<a href="https://werewolflobbies.com/"><b>Back to lobbies</b></a>
 				</div>
 				<div id="datepicker-container">
 					<div class="input-group" id="datepicker">
@@ -54,26 +54,7 @@
 						<span id="custom-button" class="btn input-group-addon">Go</span>
 			        </div>
 		    	</div>
-				<script>
-					$(function () {
-				        $('#startDatePicker').datetimepicker({
-				        	format: "ddd MMM Do YYYY",
-				        	maxDate: moment().endOf('day'),
-				        	useCurrent: false
-				        });
-				        $('#endDatePicker').datetimepicker({
-				        	format: "ddd MMM Do YYYY",
-				        	maxDate: moment().endOf('day'),
-				        	useCurrent: false
-				        });
-				        $("#startDatePicker").on("dp.change", function (e) {
-				            $('#endDatePicker').data("DateTimePicker").minDate(e.date);
-				        });
-				        $("#endDatePicker").on("dp.change", function (e) {
-				            $('#startDatePicker').data("DateTimePicker").maxDate(e.date);
-				        });
-				    });
-				</script>
+		    	<div class="clear"></div>
 			</div>
 			<div id="chartContainer">
 			</div>

@@ -2,6 +2,33 @@ var startTimeOffset = Math.trunc(Date.now() / 1000) - 604800;
 var endTimeOffset = Math.trunc(Date.now() / 1000);
 	$(function()
 	{
+		$('#startDatePicker').datetimepicker({
+        	format: "ddd MMM Do YYYY",
+        	maxDate: moment().endOf('day'),
+        	useCurrent: false
+        });
+        $('#endDatePicker').datetimepicker({
+        	format: "ddd MMM Do YYYY",
+        	maxDate: moment().endOf('day'),
+        	useCurrent: false
+        });
+        $("#startDatePicker").on("dp.change", function (e) {
+            $('#endDatePicker').data("DateTimePicker").minDate(e.date);
+        });
+        $("#endDatePicker").on("dp.change", function (e) {
+            $('#startDatePicker').data("DateTimePicker").maxDate(e.date);
+        });
+
+		var params = parseQueryString();
+		if (params.start != null && params.end != null)
+		{
+			$("#timeOffset").val("custom");
+			$("#datepicker-container").show();
+			startTimeOffset = parseInt(params.start);
+			endTimeOffset = parseInt(params.end);
+			$("#startDatePicker").data("DateTimePicker").date(moment.unix(startTimeOffset).format("ddd MMM Do YYYY"));
+			$("#endDatePicker").data("DateTimePicker").date(moment.unix(endTimeOffset).subtract(1, 'd').format("ddd MMM Do YYYY"));
+		}
 		updateData();
 
 		$("#custom-button").click(function(){
@@ -12,16 +39,17 @@ var endTimeOffset = Math.trunc(Date.now() / 1000);
 				startTimeOffset = startDate.startOf('day').unix();
 				endTimeOffset = endDate.startOf('day').add(1, 'days').unix();
 				updateData();
+
+				location.hash = "#start=" + startTimeOffset + "&end=" + endTimeOffset;
 			}
 		});
 	});
 
-updateData = function()
+var updateData = function()
 {
 	var usData = [];
 	var euData = [];
 
-	console.log("using: " + startTimeOffset + " + " + endTimeOffset);
 	var filter = '?orderBy="$key"&startAt="' + startTimeOffset + '"&endAt="' + endTimeOffset + '"';
 		$.getJSON("https://werewolflobbies.firebaseio.com/us.json" + filter, function(data)
 		{
@@ -48,7 +76,7 @@ updateData = function()
 	});
 
 	
-		createContainer = function()
+		var createContainer = function()
 		{
 		var container = document.getElementById("chartContainer");
 		container.innerHTML = "";
@@ -79,6 +107,8 @@ updateData = function()
 		        ]
 		    },
 		    options: {
+		    	responsive: true,
+		    	maintainAspectRatio: false,
 		        scales: {
 		        	xAxes: [{
 		        		type: "time",
@@ -109,7 +139,7 @@ updateData = function()
 	}
 }
 
-timeOffsetChanged = function()
+var timeOffsetChanged = function()
 {
 	var select = document.getElementById("timeOffset");
 	var value = select.options[select.selectedIndex].value;
@@ -119,6 +149,7 @@ timeOffsetChanged = function()
 		startTimeOffset = Math.trunc(Date.now() / 1000) - parseInt(value);
 		endTimeOffset = Math.trunc(Date.now() / 1000);
 		updateData();
+		location.hash = "";
 	}
 	else
 	{
@@ -126,3 +157,16 @@ timeOffsetChanged = function()
 		$("#custom-button").click();
 	}
 }
+
+var parseQueryString = function() {
+	var queryString = location.hash.substring(1);
+    var params = {}, queries, temp, i, l;
+    // Split into key/value pairs
+    queries = queryString.split("&");
+    // Convert the array of strings into an object
+    for (i = 0, l = queries.length; i < l; i++) {
+        temp = queries[i].split('=');
+        params[temp[0]] = temp[1];
+    }
+    return params;
+};
