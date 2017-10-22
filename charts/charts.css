@@ -47,3 +47,12 @@ body {
 	position: relative;
 	height: 60vh;
 }
+
+.highlight-day {
+	color: white;
+	background-color: #f0ad4e;
+}
+
+.highlight-day::before {
+	border-bottom-color: white !important;
+}

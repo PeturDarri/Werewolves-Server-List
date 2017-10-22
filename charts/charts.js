@@ -19,6 +19,15 @@ var endTimeOffset = Math.trunc(Date.now() / 1000);
             $('#startDatePicker').data("DateTimePicker").maxDate(e.date);
         });
 
+        $("#startDatePicker").on("dp.show", function() {
+            var otherDate = $('#endDatePicker').data("DateTimePicker").date().format("MM/DD/YYYY");
+            $("[data-day=\"" + otherDate + "\"]").addClass("highlight-day");
+        });
+        $("#endDatePicker").on("dp.show", function() {
+        	var otherDate = $('#startDatePicker').data("DateTimePicker").date().format("MM/DD/YYYY");
+            $("[data-day=\"" + otherDate + "\"]").addClass("highlight-day");
+        });
+
 		var params = parseQueryString();
 		if (params.start != null && params.end != null)
 		{
