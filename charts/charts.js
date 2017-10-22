@@ -1,5 +1,5 @@
-var startTimeOffset = Math.trunc(Date.now() / 1000) - 604800;
-var endTimeOffset = Math.trunc(Date.now() / 1000);
+var startTimeOffset = Math.floor(Date.now() / 1000) - 604800;
+var endTimeOffset = Math.floor(Date.now() / 1000);
 	$(function()
 	{
 		$('#startDatePicker').datetimepicker({
@@ -155,8 +155,8 @@ var timeOffsetChanged = function()
 	if (value != "custom")
 	{
 		$("#datepicker-container").hide();
-		startTimeOffset = Math.trunc(Date.now() / 1000) - parseInt(value);
-		endTimeOffset = Math.trunc(Date.now() / 1000);
+		startTimeOffset = Math.floor(Date.now() / 1000) - parseInt(value);
+		endTimeOffset = Math.floor(Date.now() / 1000);
 		updateData();
 		location.hash = "";
 	}
