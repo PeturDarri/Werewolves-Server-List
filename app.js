@@ -116,7 +116,20 @@ window.onload = function () {
 	checkShowNotice(startRegion);
     demo = new DemoLoadBalancing();
     demo.start();
-};
+
+    //IE support
+	if (!Array.prototype.includes) {
+	  Object.defineProperty(Array.prototype, "includes", {
+	    enumerable: false,
+	    value: function(obj) {
+	        var newArr = this.filter(function(el) {
+	          return el == obj;
+	        });
+	        return newArr.length > 0;
+	      }
+	  });
+	}
+}
 
 onRoomsList = function(rooms)
 {
