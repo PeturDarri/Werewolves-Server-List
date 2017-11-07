@@ -92,8 +92,8 @@ var DemoLoadBalancing = (function (_super) {
     };
 	
 	DemoLoadBalancing.prototype.onAppStats = function (errorCode, errorMsg, stats) {
-		document.getElementById("fullPlayerCount").innerHTML = (stats.peerCount + stats.masterPeerCount) - 1;
-		document.getElementById("playerCount").innerHTML = stats.masterPeerCount - 1;
+		document.getElementById("fullPlayerCount").innerHTML = escapeHtml((stats.peerCount + stats.masterPeerCount) - 1);
+		document.getElementById("playerCount").innerHTML = escapeHtml(stats.masterPeerCount - 1);
 		allLobbyCount = stats.gameCount;
 		if (lobbiesGotten)
 		{
@@ -139,6 +139,7 @@ onRoomsList = function(rooms)
 	for (var i = 0; i < rooms.length; i++)
 	{
 		var name = rooms[i].name.split("-")[0];
+		var name = escapeHtml(name);
 		roomsToNotRemove.push(name);
 		if (cachedRooms.includes(name))
 		{
@@ -158,7 +159,7 @@ onRoomsList = function(rooms)
 		}
 	}
 
-	if (lobbyCount == 0)
+	if (cachedRooms.length == 0)
 	{
 		var table = document.getElementById("serverTable");
 		table.tBodies[0].innerHTML = "";
@@ -177,6 +178,11 @@ onRoomsList = function(rooms)
 onRoomAdded = function(room)
 {
 	var name = room.name.split("-")[0];
+	name = escapeHtml(name);
+	if (!isValidId(name)) {
+		console.log("server name:'" + name + "' is not valid");
+		return;
+	}
 	var table = document.getElementById("serverTable");
 	tr = table.tBodies[0].insertRow(-1);
 
@@ -185,7 +191,7 @@ onRoomAdded = function(room)
 	tr.setAttribute("data-toggle", "collapse");
 	tr.setAttribute("data-target", "#" + name + "Info");
 
-	tr.insertCell(0).innerHTML = name;
+	tr.insertCell(0).innerHTML = escapeHtml(name);
 
 	var spectatorString = "";
 	var spectatorCount = room.getCustomProperty("C6");
@@ -194,8 +200,8 @@ onRoomAdded = function(room)
 		spectatorString = " (+" + spectatorCount + ")";
 	}
 
-	tr.insertCell(1).innerHTML = room.getCustomProperty("C1") + "/8" + spectatorString;
-	tr.insertCell(2).innerHTML = Languages[room.getCustomProperty("C0")];
+	tr.insertCell(1).innerHTML = escapeHtml(room.getCustomProperty("C1") + "/8" + spectatorString);
+	tr.insertCell(2).innerHTML = escapeHtml(Languages[room.getCustomProperty("C0")]);
 
 	//Extra info rows
 	var extraRow = table.tBodies[0].insertRow(-1);
@@ -219,6 +225,7 @@ onRoomAdded = function(room)
 onRoomChanged = function(room)
 {
 	var name = room.name.split("-")[0];
+	name = escapeHtml(name);
 	tr = document.getElementById(name);
 
 	var spectatorString = "";
@@ -227,8 +234,8 @@ onRoomChanged = function(room)
 	{
 		spectatorString = " (+" + spectatorCount + ")";
 	}
-	tr.cells[1].innerHTML = room.getCustomProperty("C1") + "/8" + spectatorString;
-	tr.cells[2].innerHTML = Languages[room.getCustomProperty("C0")];
+	tr.cells[1].innerHTML = escapeHtml(room.getCustomProperty("C1") + "/8" + spectatorString);
+	tr.cells[2].innerHTML = escapeHtml(Languages[room.getCustomProperty("C0")]);
 	//Extra info rows
 	var div = document.getElementById(name + "Info");
 	var players = room.getCustomProperty("P");
@@ -300,12 +307,21 @@ addExtraInfo = function(parent, players)
 		{
 			var li = document.createElement("li");
 			var num = players[i].split(":")[1];
+			var roundsText;
+			if (num != "")
+			{
+				roundsText = "(played " + escapeHtml(num) + " rounds)";
+			}
+			else
+			{
+				roundsText = "(rounds still loading...)";
+			}
 			var name = players[i].split(":")[0];
 			if (name == "StableSheep")
 			{
 				li.id = "creatorPlayer";
 			}
-			li.innerHTML = "<b>" + name + "</b>" + "<span class=\"numPlayerPlayed\"> (played " + num + " rounds)</span>";
+			li.innerHTML = "<b>" + escapeHtml(name) + "</b>" + "<span class=\"numPlayerPlayed\"> " + roundsText + "</span>";
 			ol.appendChild(li);
 		}
 	}
@@ -323,3 +339,24 @@ NodeList.prototype.remove = HTMLCollection.prototype.remove = function() {
         }
     }
 }
+
+var entityMap = {
+	'&': '&amp;',
+  	'<': '&lt;',
+  	'>': '&gt;',
+  	'"': '&quot;',
+  	"'": '&#39;',
+  	'/': '&#x2F;',
+  	'`': '&#x60;',
+  	'=': '&#x3D;'
+};
+
+function escapeHtml (string) {
+  	return String(string).replace(/[&<>"'`=\/]/g, function (s) {
+    	return entityMap[s];
+  	});
+};
+
+function isValidId(text) {
+	return /^[-A-Za-z0-9_:.]*$/.test(text);
+};
