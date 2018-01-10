@@ -3,22 +3,25 @@ table {
 	width: 100%;
 }
 
-th, td {
+.darkTable>thead>tr>th, td {
 	text-align: left;
 	padding: 8px;
 }
 
-th 
+.darkTable>thead>tr>th
 {
-	border: 1px solid #4CAF50;
-	background-color: #4CAF50;
-	color: white;
+	background-color: #37363D;
+	color: lightgray;
 }
 
 body {
 	font-family: 'Roboto', sans-serif;
-	max-width: 1280px;
 	margin: auto;
+	background: #2A292F;
+	color: lightgray;
+	position: relative;
+	min-height: 100vh;
+	padding-bottom: 8rem;
 }
 
 .extraServerCell
@@ -28,23 +31,33 @@ body {
 
 .extraServerInside
 {
-	background-color: #555;
+	background-color: #2A292F;
 	color: white;
 	padding: 8px;
 	height: auto;
 	width: 100%;
 }
 
+#topBar {
+	margin-top: 5px;
+	height: 30px;
+}
+
 .clickable-row
 {
 	cursor: pointer;
-	border: 1px solid lightgray;
+	background: #2D2C33;
+	border-bottom: 2px solid #2A292F;
 	border-top: none;
 }
 
+/* .clickable-row:nth-child(4n+3) {
+	background: #1E9293;
+} */
+
 #noServers
 {
-	border: 1px solid lightgray;
+	background: transparent;
 	border-top: none;
 }
 
@@ -60,11 +73,13 @@ body {
 
 .clickable-row:hover
 {
-	background-color: #f2f2f2;
+	background-color: #34333B;
 }
 
-#wrapper {
-	margin: 10px;
+.wrapper {
+	padding: 10px 7px 0px 7px;
+	margin: 0 auto;
+	max-width: 1080px;
 }
 
 #connectStatus {
@@ -73,12 +88,15 @@ body {
 
 #region {
 	margin-bottom: 4px;
-	transform: translateY(-2px);
+	color: white;
+	background: #2A292F;
+	border: none;
 }
 
 #langNotice {
 	display: none;
 }
+
 
 #extraInfo span {
 	color: #757575;
@@ -92,14 +110,128 @@ body {
 	margin-left: 4px;
 }
 
-#topBar {
-	
-}
-
 #chartsLink {
 	float: right;
 }
 
 #creatorPlayer {
 	color: #4CAF50;
-}	
+}
+
+.tabs {
+	height: 50px;
+	width: 100%;
+}
+
+.container {
+	padding: 0 !important;
+	width: 100%;
+}
+
+.header {
+	background: #37363D;
+	margin: 0 auto;
+	padding: 15px;
+}
+
+.nav-tabs {
+	background: #37363D;
+	box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+	text-transform: uppercase;
+}
+
+.nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover {
+	font-weight: bold;
+	color: white;
+	background-color: transparent !important;
+	border: none;
+	border-bottom: 1.5px solid #1DB5BD !important;
+}
+
+.nav-tabs.nav-justified>.active>a, .nav-tabs.nav-justified>.active>a:focus, .nav-tabs.nav-justified>.active>a:hover {
+	border: none;
+	background: transparent !important;
+}
+
+.nav > li > a:focus, .nav > li > a:hover {
+	background: transparent !important;
+}
+
+.nav-tabs.nav-justified>li>a {
+    margin-right: 0;
+    border-radius: 0 !important;
+	border: none;
+}
+
+.nav-tabs>li>a:hover {
+	border: none;
+}
+
+.nav-tabs>li>a {
+	color: white !important;
+}
+
+.nav-tabs.nav-justified>li>a:hover {
+	background: rgba(255,255,255,0.1) !important;
+}
+
+@media (max-width: 768px) {
+	.nav-justified > li {
+	  display: table-cell;
+	  width: 1%;
+	}
+	.nav-justified > li > a  {
+	  margin-bottom: 0 !important;
+	}
+  }
+
+.stickyHeader {
+	position: fixed;
+	top: 0;
+	width: 100%
+}
+
+.stickyHeader + .tab-content {
+	padding-top: 40.8px;
+  }
+
+footer {
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	padding: 1.5rem;
+	padding-bottom: 2rem;
+	text-align: center;
+	background: #37363D;
+}
+
+footer > p {
+	margin: 0;
+}
+
+/*Leaderboards*/
+#leaderTable > tbody > tr {
+	background: #2D2C33;
+	border-bottom: 2px solid #2A292F;
+}
+
+#playerSearch {
+	color: lightgray;
+	margin-left: 3px;
+	width: 85%;
+	background: #2A292F;
+	border: none;
+	border-bottom: 1px solid lightgrey;
+}
+
+.ui-widget {
+	width: 100%;
+	max-width: 256px;
+	margin: 0 8px 8px 5px;
+}
+
+#leaderTable .highlight {
+    font-weight: bold;
+    background-color: #4caf50;
+}

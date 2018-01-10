@@ -38,7 +38,6 @@ var endTimeOffset = Math.floor(Date.now() / 1000);
 			$("#startDatePicker").data("DateTimePicker").date(moment.unix(startTimeOffset).format("ddd MMM Do YYYY"));
 			$("#endDatePicker").data("DateTimePicker").date(moment.unix(endTimeOffset).subtract(1, 'd').format("ddd MMM Do YYYY"));
 		}
-		updateData();
 
 		$("#custom-button").click(function(){
 			var startDate = $("#startDatePicker").data("DateTimePicker").date();
@@ -52,10 +51,38 @@ var endTimeOffset = Math.floor(Date.now() / 1000);
 				location.hash = "#start=" + startTimeOffset + "&end=" + endTimeOffset;
 			}
 		});
+
+		var chartsTab = document.getElementById("charts-tab");
+
+		var getChart = function()
+		{
+			if (document.getElementById("chartContainer").childNodes.length == 1)
+			{
+				updateData();
+			}
+		};
+		if (location.hash == "#charts")
+		{
+			chartsTab.click();
+			getChart();
+		}
+
+		chartsTab.onclick = function(){
+			location.hash = "#charts"
+			gtag('config', 'UA-107777847-1', {'page_path': "/" + location.hash});
+			if (chartsTab.parentElement.className != "active")
+			{
+				getChart();
+			}
+		};
 	});
 
 var updateData = function()
 {
+	$(".ajax-loader").show();
+	var container = document.getElementById("chartContainer");
+	container.innerHTML = "";
+
 	var usData = [];
 	var euData = [];
 
@@ -81,6 +108,7 @@ var updateData = function()
 			});
 
 			createContainer();
+			$(".ajax-loader").hide();
 		});
 	});
 

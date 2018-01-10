@@ -31,52 +31,155 @@
 		<!--info (optional)--><script type="text/javascript" src="cloud-app-info.js"></script>
 		<script type="text/javascript" src="app.js"></script>
 
-		<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"> 
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
- 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
- 		<link rel="stylesheet" type="text/css" href="style.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+		<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="style.css">
+		 
+		<link rel="stylesheet" href="charts/charts.css">
+ 		<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.19.1/moment.min.js"></script>
+ 		<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+ 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css" />
+ 		<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.min.js"></script>
+		<script src="charts/charts.js"></script>
+		<script src="leaderboards.js"></script>
+		<link rel="stylesheet" href="loader.css">
 	</head>
 	<body>
-		<h1 align="center">Werewolves Within - Lobby List</h1>
-		
-		<div id="wrapper">
-			<div id="topBar">
-				<div id="chartsLink">
-					<a href="https://werewolflobbies.com/charts/">Player Count Chart 📈</a>
+		<h3 class="header" align="center">Werewolves Within</h3>
+		<div class="container">
+			<ul id="navHeader" class="nav nav-tabs nav-justified">
+				<li class="active"><a data-toggle="tab" href="#lobbies" id="lobbies-tab">Lobbies</a></li>
+				<li><a data-toggle="tab" href="#leaderboards" id="leaderboards-tab">Leaderboards</a></li>
+				<li><a data-toggle="tab" href="#charts" id="charts-tab">Charts</a></li>
+			</ul>
+			
+			<div class="tab-content">
+				<div id="lobbies" class="tab-pane in active">
+					<div class="wrapper">
+						<div id="topBar">
+							<div id="connectionOptions">
+								<b><span id="connectStatus">Disconnected</span></b>
+								<select id="region" onchange="regionChanged()">
+									<option value="us">US</option>
+									<option value="eu">EU</option>
+									<option value="au">AU</option>
+									<option value="asia">AS</option>
+									<option value="jp">JP</option>
+								</select>
+							</div>
+						</div>
+						<div id="showData">
+							<table id="serverTable" class="darkTable">
+								<thead>
+									<tr>
+										<th>Name</th>
+										<th>Players</th>
+										<th>Language</th>
+									</tr>
+								</thead>
+								<tbody>
+								</tbody>
+							</table>
+						</div>
+						<br>
+						<div id="extraInfo">
+							<span>Player count:<b><span class="extraNumber" id="fullPlayerCount">0</span></b></span>
+							<span>(<b><span id="playerCount">0</span></b> of them in menu)</span>
+							<br>
+							<span>Private lobby count:<b><span class="extraNumber" id="privateLobbyCount">...</span></b></span>
+						</div>
+						<p id="langNotice"><i><b>Notice</b>: You can only join rooms with the same language as you've set in options</i></p>
+					</div>
 				</div>
-				<div id="connectionOptions">
-					<b><span id="connectStatus">Disconnected</span></b>
-					<select id="region" onchange="regionChanged()">
-						<option value="us">US</option>
-						<option value="eu">EU</option>
-						<option value="au">AU</option>
-						<option value="asia">AS</option>
-						<option value="jp">JP</option>
-					</select>
+				<div id="leaderboards" class="tab-pane">
+					<div class="wrapper">
+						<div class="ajax-loader">
+								<div class="ajax-loader-logo">
+								<!-- circle -->
+								<div class="ajax-loader-circle">
+									<svg class="ajax-loader-circle-spinner"
+										viewBox="0 0 500 500"
+										xml:space="preserve">
+										<circle cx="250" cy="250" r="239" />
+									</svg>
+								</div>
+								</div>
+							</div>
+						<div class="ui-widget">
+							<label for="playerSearch"><img src="search.png"></label>
+							<input id="playerSearch">
+						</div>
+						<table id="leaderTable" class="darkTable">
+							<thead>
+							<tr>
+                                <th>Rank</th>
+							    <th>Username</th>
+							    <th>Language</th>
+							    <th>Rounds</th>
+							</tr>
+							</thead>
+						</table>
+					</div>
+				</div>
+				<div id="charts" class="tab-pane">
+					<div class="wrapper">
+						<div class="ajax-loader">
+							<div class="ajax-loader-logo">
+							<!-- circle -->
+							<div class="ajax-loader-circle">
+								<svg class="ajax-loader-circle-spinner"
+									viewBox="0 0 500 500"
+									xml:space="preserve">
+									<circle cx="250" cy="250" r="239" />
+								</svg>
+							</div>
+							</div>
+						</div>
+							<div id="topBar">
+								<select id="timeOffset" class="form-control" onchange="timeOffsetChanged()">
+									<option value="86400">Past 24 hours</option>	
+									<option value="604800" selected>Past week</option>
+									<option value="2628000">Past month</option>
+									<option value="custom">Custom</option>
+								</select>
+								<div id="datepicker-container">
+									<div class="input-group" id="datepicker">
+										<input type="text" class="form-control" id="startDatePicker"/>
+										<span class="input-group-addon">to</span>
+										<input type="text" class="form-control" id="endDatePicker"/>
+										<span id="custom-button" class="btn input-group-addon">Go</span>
+									</div>
+								</div>
+								<div class="clear"></div>
+							</div>
+							<div id="chartContainer">
+							</div>
+						</div>
 				</div>
 			</div>
-			<div id="showData">
-				<table id="serverTable">
-					<thead>
-						<tr>
-							<th>Name</th>
-							<th>Players</th>
-							<th>Language</th>
-						</tr>
-					</thead>
-					<tbody>
-					</tbody>
-				</table>
-			</div>
-			<br>
-			<div id="extraInfo">
-				<span>Player count:<b><span class="extraNumber" id="fullPlayerCount">0</span></b></span>
-				<span>(<b><span id="playerCount">0</span></b> of them in menu)</span>
-				<br>
-				<span>Private lobby count:<b><span class="extraNumber" id="privateLobbyCount">...</span></b></span>
-			</div>
-			<p id="langNotice"><i><b>Notice</b>: You can only join rooms with the same language as you've set in options</i></p>
 		</div>
+			
+		<footer>
+		    <p>© Pétur Darri Pétursson 2018</p>
+		    <p>Backend stats API by <a href="https://my.playstation.com/TheWonderSwan">TheWonderSwan</a></p></p?>
+			<a href="https://github.com/PeturDarri/Werewolves-Server-List">Hosted on GitHub Pages</a>
+		</footer>
+		<script>
+			window.onscroll = function() {myFunction()};
+			var header = document.getElementById("navHeader");
+			var sticky = header.offsetTop;
+			
+			function myFunction() {
+				if (window.pageYOffset >= sticky) {
+					header.classList.add("stickyHeader");
+				} else {
+					header.classList.remove("stickyHeader");
+				}
+			} 
+		</script>
 	</body>
 </html>
