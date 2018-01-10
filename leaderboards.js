@@ -51,6 +51,7 @@ $(function(){
 });
 
 var wwStatsUrl = function (path) {
+    //return 'https://wwstats.local/' + path;
     return 'https://wwstats.iis03.xibis.net/' + path;
 };
 
@@ -62,7 +63,7 @@ var populateLeaderboard = function(data, highlightPlayerName) {
     var afterPopulateFunction = null;
 
     var tbody = document.createElement("tbody");
-    data.forEach(function (element) {
+    data.players.forEach(function (element) {
         var newRow = tbody.insertRow(tbody.rows.length);
         var rankCell = newRow.insertCell(0);
         var nameCell = newRow.insertCell(1);
