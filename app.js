@@ -81,8 +81,7 @@ var DemoLoadBalancing = (function (_super) {
 		}
 		else
 		{
-			statusElem.innerHTML = "Disconnected (Try refreshing)";
-			statusElem.style.color = "red";
+			statusElem.innerHTML = "<span style='color: red'>Disconnected</span> <a style='text-decoration: underline' onclick='reconnect()'>(Reconnect)</a>";
 		}
 	};
 	
@@ -128,6 +127,12 @@ window.onload = function () {
 	        return newArr.length > 0;
 	      }
 	  });
+	}
+
+	lobbiesTab = document.getElementById("lobbies-tab");
+
+	lobbiesTab.onclick = function(){
+		location.hash = "";
 	}
 }
 
@@ -327,6 +332,15 @@ addExtraInfo = function(parent, players)
 	}
 	div.appendChild(ol);
 	parent.appendChild(div);
+}
+
+var reconnect = function()
+{
+	var regionElem = document.getElementById("region");
+	var region = regionElem.options[regionElem.selectedIndex].value;
+	console.log("reconnect to " + region);
+	demo.disconnect
+	demo.connectToRegionMaster(region);
 }
 
 Element.prototype.remove = function() {
