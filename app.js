@@ -38,6 +38,7 @@ var startRegion = "us";
 var lobbyCount = 0;
 var allLobbyCount = 0;
 var lobbiesGotten = false;
+var lastRegionHash = "";
 
 var DemoWss = this["AppInfo"] && this["AppInfo"]["Wss"];
 var DemoAppId = this["AppInfo"] && this["AppInfo"]["AppId"] ? this["AppInfo"]["AppId"] : "<no-app-id>";
@@ -81,8 +82,7 @@ var DemoLoadBalancing = (function (_super) {
 		}
 		else
 		{
-			statusElem.innerHTML = "Disconnected (Try refreshing)";
-			statusElem.style.color = "red";
+			statusElem.innerHTML = "<span style='color: red'>Disconnected</span> <a style='text-decoration: underline' onclick='reconnect()'>(Reconnect)</a>";
 		}
 	};
 	
@@ -104,6 +104,7 @@ var DemoLoadBalancing = (function (_super) {
     return DemoLoadBalancing;
 }(Photon.LoadBalancing.LoadBalancingClient));
 var demo;
+var lobbiesTab;
 window.onload = function () {
 	var region = document.getElementById("region");
 	var hash = location.hash.substring(1).toLowerCase();
@@ -128,6 +129,29 @@ window.onload = function () {
 	        return newArr.length > 0;
 	      }
 	  });
+	}
+
+	lobbiesTab = document.getElementById("lobbies-tab");
+	
+	window.addEventListener('popstate', function() {
+	if (!location.hash.startsWith("#leaderboards") && !location.hash.startsWith("#charts"))
+	{
+		if (lobbiesTab.parentElement.className != "active")
+		{
+			lobbiesTab.click();
+		}
+	}
+});
+	
+	lobbiesTab.onclick = function(){
+		document.title = "Lobbies - Werewolves Within";
+		location.hash = lastRegionHash;
+		gtagSetPage("/" + location.hash);
+		
+		if (lastRegionHash == "")
+		{
+			history.replaceState({}, document.title, ".");
+		}
 	}
 }
 
@@ -262,6 +286,7 @@ regionChanged = function() {
 	var regionElem = document.getElementById("region");
 	var region = regionElem.options[regionElem.selectedIndex].value;
 	location.hash = "#" + region;
+	lastRegionHash = "#" + region;
 	checkShowNotice(region);
 	demo.disconnect();
 	demo.connectToRegionMaster(region);
@@ -282,8 +307,6 @@ checkShowNotice = function(region) {
 	{
 		document.getElementById("langNotice").style.display = "none";
 	}
-
-	gtag('config', 'UA-107777847-1', {'page_path': "/" + location.hash});
 }
 
 addExtraInfo = function(parent, players)
@@ -327,6 +350,18 @@ addExtraInfo = function(parent, players)
 	}
 	div.appendChild(ol);
 	parent.appendChild(div);
+}
+
+var reconnect = function()
+{
+	var regionElem = document.getElementById("region");
+	var region = regionElem.options[regionElem.selectedIndex].value;
+	
+	demo.disconnect
+	demo.connectToRegionMaster(region);
+	
+	document.getElementById("serverTable").tBodies[0].innerHTML = "";
+	cachedRooms = [];
 }
 
 Element.prototype.remove = function() {

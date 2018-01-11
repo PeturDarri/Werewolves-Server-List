@@ -1,5 +1,6 @@
 var startTimeOffset = Math.floor(Date.now() / 1000) - 604800;
 var endTimeOffset = Math.floor(Date.now() / 1000);
+var lastQueryString = "";
 	$(function()
 	{
 		$('#startDatePicker').datetimepicker({
@@ -27,7 +28,7 @@ var endTimeOffset = Math.floor(Date.now() / 1000);
         	var otherDate = $('#startDatePicker').data("DateTimePicker").date().format("MM/DD/YYYY");
             $("[data-day=\"" + otherDate + "\"]").addClass("highlight-day");
         });
-
+		
 		var params = parseQueryString();
 		if (params.start != null && params.end != null)
 		{
@@ -38,7 +39,6 @@ var endTimeOffset = Math.floor(Date.now() / 1000);
 			$("#startDatePicker").data("DateTimePicker").date(moment.unix(startTimeOffset).format("ddd MMM Do YYYY"));
 			$("#endDatePicker").data("DateTimePicker").date(moment.unix(endTimeOffset).subtract(1, 'd').format("ddd MMM Do YYYY"));
 		}
-		updateData();
 
 		$("#custom-button").click(function(){
 			var startDate = $("#startDatePicker").data("DateTimePicker").date();
@@ -49,13 +49,66 @@ var endTimeOffset = Math.floor(Date.now() / 1000);
 				endTimeOffset = endDate.startOf('day').add(1, 'days').unix();
 				updateData();
 
-				location.hash = "#start=" + startTimeOffset + "&end=" + endTimeOffset;
+				lastQueryString = "?start=" + startTimeOffset + "&end=" + endTimeOffset;
+				location.hash = "#charts" + lastQueryString;
 			}
 		});
-	});
+		
+		var chartsTab = document.getElementById("charts-tab");
+		
+		window.addEventListener('popstate', function() {
+			var params = parseQueryString();
+			if (params.start != null && params.end != null)
+			{
+				$("#timeOffset").val("custom");
+				$("#datepicker-container").show();
+				startTimeOffset = parseInt(params.start);
+				endTimeOffset = parseInt(params.end);
+				$("#startDatePicker").data("DateTimePicker").date(moment.unix(startTimeOffset).format("ddd MMM Do YYYY"));
+				$("#endDatePicker").data("DateTimePicker").date(moment.unix(endTimeOffset).subtract(1, 'd').format("ddd MMM Do YYYY"));
+			}
+			
+			if (location.hash.startsWith("#charts"))
+			{
+				if (chartsTab.parentElement.className != "active")
+				{
+					chartsTab.click();
+				}
+				getChart();
+			}
+		});
 
+		var getChart = function()
+		{
+			if (document.getElementById("chartContainer").childNodes.length == 1)
+			{
+				updateData();
+			}
+		};
+		
+		if (location.hash.startsWith("#charts"))
+		{
+			document.title = "Charts - Werewolves Within";
+			chartsTab.click();
+			getChart();
+		}
+
+		chartsTab.onclick = function(){
+			document.title = "Charts - Werewolves Within";
+			location.hash = "#charts" + lastQueryString;
+			gtagSetPage("/#charts");
+			if (chartsTab.parentElement.className != "active")
+			{
+				getChart();
+			}
+		};
+	});
 var updateData = function()
 {
+	$(".ajax-loader").show();
+	var container = document.getElementById("chartContainer");
+	container.innerHTML = "";
+
 	var usData = [];
 	var euData = [];
 
@@ -81,6 +134,7 @@ var updateData = function()
 			});
 
 			createContainer();
+			$(".ajax-loader").hide();
 		});
 	});
 
@@ -158,7 +212,7 @@ var timeOffsetChanged = function()
 		startTimeOffset = Math.floor(Date.now() / 1000) - parseInt(value);
 		endTimeOffset = Math.floor(Date.now() / 1000);
 		updateData();
-		location.hash = "";
+		location.hash = "#charts";
 	}
 	else
 	{
@@ -168,7 +222,8 @@ var timeOffsetChanged = function()
 }
 
 var parseQueryString = function() {
-	var queryString = location.hash.substring(1);
+	if (!location.hash.includes("?")) return "";
+	var queryString = location.hash.split('?')[1];
     var params = {}, queries, temp, i, l;
     // Split into key/value pairs
     queries = queryString.split("&");
@@ -177,5 +232,6 @@ var parseQueryString = function() {
         temp = queries[i].split('=');
         params[temp[0]] = temp[1];
     }
+	//lastQueryString = "?" + queryString;
     return params;
 };
