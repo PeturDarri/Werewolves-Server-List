@@ -14,7 +14,7 @@ $(function(){
 	}).on("page", function(event, num){
 		$('#playerSearch').val("");
 		lastLeaderQueryString = "";
-		$("#leaderTable").empty();
+		$("#leaderTable > tbody").empty();
 		pageNumber = num - 1;
 	});
 	
@@ -32,7 +32,7 @@ $(function(){
 				{
 					$("#playerSearch").val(queryObj.player);
 					pageNumber = 0;
-					$(leaderTable).empty();
+					$("#leaderTable > tbody").empty();
 				}
 			}
 			else
@@ -40,7 +40,7 @@ $(function(){
 				if ($("#playerSearch").val() != "")
 				{
 					$("#playerSearch").val("");
-					$(leaderTable).empty();
+					$("#leaderTable > tbody").empty();
 					lastLeaderQueryString = "";
 				}
 			}
@@ -141,7 +141,7 @@ var wwStatsUrl = function (path) {
 var populateLeaderboard = function(data, highlightPlayerName) {
     var leaderTable = document.getElementById("leaderTable");
 
-    $(leaderTable).empty();
+    $("#leaderTable > tbody").empty();
 
     var afterPopulateFunction = null;
 
