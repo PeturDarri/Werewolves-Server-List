@@ -145,7 +145,7 @@ body {
 	color: white;
 	background-color: transparent !important;
 	border: none;
-	border-bottom: 1.5px solid #269cd4 !important;
+	box-shadow: inset 0 -2px 0 #269cd4;
 }
 
 .nav-tabs.nav-justified>.active>a, .nav-tabs.nav-justified>.active>a:focus, .nav-tabs.nav-justified>.active>a:hover {
