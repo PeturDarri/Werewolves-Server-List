@@ -1,5 +1,6 @@
 var lastLeaderQueryString = "";
 var pageNumber = 0;
+var totalPages = 5;
 $(function(){
     var leaderTab = document.getElementById("leaderboards-tab");
 	
@@ -21,12 +22,17 @@ $(function(){
 	window.addEventListener('popstate', function() {
 		if (location.hash.startsWith("#leaderboards"))
 		{
+			if (location.hash.includes("?player="))
+			{
+				lastLeaderQueryString = "?" + location.hash.split("?")[1];
+			}
 			if (leaderTab.parentElement.className != "active")
 			{
 				leaderTab.click();
 			}
 			
 			var queryObj = parseQueryString();
+			console.log(queryObj);
 			if (queryObj.player != null) {
 				if ($("#playerSearch").val() != queryObj.player)
 				{
@@ -152,7 +158,7 @@ var populateLeaderboard = function(data, highlightPlayerName) {
         var nameCell = newRow.insertCell(1);
         var langCell = newRow.insertCell(2);
         var roundsCell = newRow.insertCell(3);
-        nameCell.innerHTML = element.name;
+        nameCell.innerHTML = element.name + "<br><span class='last-seen'>" + element.lastSeen + "</span>";
         $(rankCell).html(element.rank);
         var langString = element.language;
         if (langString == "") {
@@ -211,9 +217,13 @@ var getData = function(page)
         function(data) {
             populateLeaderboard(data, playerName);
             $(".ajax-loader").hide();
+			if (playerName == null)
+			{
+				totalPages = data.pageCount;
+			}
 			
 			$('#leaderNav').bootpag({
-				total: data.pageCount
+				total: totalPages
 			});
 			
 			$("#leaderNav").show();

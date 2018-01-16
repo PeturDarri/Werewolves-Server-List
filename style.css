@@ -24,6 +24,10 @@ body {
 	padding-bottom: 10rem;
 }
 
+a {
+    color: #269cd4;
+}
+
 .extraServerCell
 {
 	padding: 0;
@@ -212,10 +216,6 @@ footer > p {
 	margin: 0;
 }
 
-footer a {
-	color: #269cd4;
-}
-
 /*Leaderboards*/
 #leaderTable > tbody > tr {
 	background: #2D2C33;
@@ -259,5 +259,14 @@ footer a {
 }
 
 input[type="search"]::-webkit-search-cancel-button {
-  -webkit-appearance: searchfield-cancel-button;
+	-webkit-appearance: searchfield-cancel-button;
+}
+
+.last-seen {
+    color: #909090;
+}
+
+.highlight .last-seen {
+	color: #d4d4d4;
+	font-weight: normal;
 }

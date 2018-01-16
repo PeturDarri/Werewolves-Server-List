@@ -344,7 +344,7 @@ addExtraInfo = function(parent, players)
 			{
 				li.id = "creatorPlayer";
 			}
-			li.innerHTML = "<b>" + escapeHtml(name) + "</b>" + "<span class=\"numPlayerPlayed\"> " + roundsText + "</span>";
+			li.innerHTML = "<b><a href='/Werewolves-Server-List/#leaderboards?player=" + escapeHtml(name) + "'>" + escapeHtml(name) + "</b></a>" + "<span class=\"numPlayerPlayed\"> " + roundsText + "</span>";
 			ol.appendChild(li);
 		}
 	}
