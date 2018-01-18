@@ -96,7 +96,6 @@ var lastQueryString = "";
 		chartsTab.onclick = function(){
 			document.title = "Charts - Werewolves Within";
 			location.hash = "#charts" + lastQueryString;
-			gtagSetPage("/#charts");
 			if (chartsTab.parentElement.className != "active")
 			{
 				getChart();

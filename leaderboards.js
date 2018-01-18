@@ -81,7 +81,6 @@ $(function(){
     leaderTab.onclick = function(){
 		document.title = "Leaderboards - Werewolves Within";
         location.hash = "#leaderboards" + lastLeaderQueryString;
-		gtagSetPage("/#leaderboards");
         if (leaderTab.parentElement.className != "active")
         {
             updateData(0);
